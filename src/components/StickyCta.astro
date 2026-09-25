@@ -46,4 +46,11 @@ import WhatsAppIcon from './WhatsAppIcon.astro';
   .sticky__sub { font-size: 0.78rem; color: var(--niebla); white-space: nowrap; }
   .sticky__btn { width: auto; flex: none; min-height: 3rem; padding: 0.75rem 1.5rem; font-size: 1rem; }
   @media (max-width: 767px) { .sticky { display: flex; } }
+  /* Teléfonos muy angostos (≤ 359 px): todo cabe en una fila sin cortar el botón */
+  @media (max-width: 359px) {
+    .sticky { gap: 0.5rem; padding-inline: 0.875rem; }
+    .sticky__price .t-display { font-size: 1.35rem; }
+    .sticky__wa { width: 2.75rem; height: 2.75rem; }
+    .sticky__btn { padding-inline: 1rem; font-size: 0.9375rem; }
+  }
 </style>

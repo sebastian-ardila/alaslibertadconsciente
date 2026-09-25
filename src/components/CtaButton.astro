@@ -18,6 +18,5 @@ const { label, id, variant = 'oro', class: cls } = Astro.props;
   target="_blank"
   rel="noopener"
 >
-  <Star />
-  <span>{label}<span class="sr-only"> (se abre en una pestaña nueva)</span></span>
+  <span class="btn__label"><Star class="btn__star" />{label}<span class="sr-only"> (se abre en una pestaña nueva)</span></span>
 </a>
