@@ -65,4 +65,9 @@ import { CHECKOUT_URL, PRODUCT, WHATSAPP_URL } from '../content/landing';
   }
   .hd__buy:hover { background: var(--oro); color: var(--noche); }
   @media (max-width: 560px) { .hd__link { display: none; } }
+  /* En móvil la barra de compra inferior reemplaza al botón del header */
+  @media (max-width: 767px) {
+    .hd__buy { transition: opacity 0.3s, visibility 0.3s; }
+    :global(body.has-sticky) .hd__buy { opacity: 0; visibility: hidden; }
+  }
 </style>

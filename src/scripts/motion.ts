@@ -122,34 +122,52 @@ function painLines() {
   });
 }
 
-/** El giro: la escena se fija y la noche se vuelve amanecer. */
+/** El giro: la escena se fija, la frase aparece palabra por palabra y un sol dorado sube detrás. */
 function turnScene() {
   const stage = $('[data-turn]');
   if (!stage) return;
-  gsap.set(stage, { '--ink': '#e8eef7' });
+  const stars = $('.sf', stage);
   gsap.set('[data-turn-night]', { opacity: 1 });
-  gsap.set('[data-turn-sun]', { yPercent: 40, opacity: 0 });
+  gsap.set('[data-turn-sun]', { yPercent: 45, scale: 0.7, opacity: 0 });
 
   const tl = gsap.timeline({
     defaults: { ease: 'none' },
-    scrollTrigger: { trigger: stage, start: 'top top', end: '+=160%', pin: true, scrub: 0.6, anticipatePin: 1 },
+    scrollTrigger: { trigger: stage, start: 'top top', end: '+=170%', pin: true, scrub: 0.6, anticipatePin: 1 },
   });
-  tl.from('[data-turn-lead]', { opacity: 0, y: 30, duration: 0.2 })
-    .from('[data-turn-key]', { opacity: 0, scale: 0.82, duration: 0.35 }, 0.1)
-    .to('[data-turn-sun]', { yPercent: -10, opacity: 1, duration: 0.5 }, 0.3)
-    .to('[data-turn-night]', { opacity: 0, duration: 0.25 }, 0.5)
-    .to(stage, { '--ink': '#0a1733', duration: 0.12 }, 0.56)
-    .from('[data-turn-after]', { opacity: 0, y: 30, duration: 0.2 }, 0.7)
-    .to({}, { duration: 0.15 });
+  tl.from('[data-turn-lead]', { opacity: 0, y: 24, duration: 0.12 })
+    .from('[data-turn-word]', { opacity: 0, yPercent: 40, filter: 'blur(8px)', duration: 0.12, stagger: 0.07 }, 0.08)
+    .to('[data-turn-sun]', { yPercent: 0, scale: 1, opacity: 1, duration: 0.5 }, 0.3)
+    .to('[data-turn-night]', { opacity: 0, duration: 0.45 }, 0.35)
+    .to('.turn__rays', { rotate: 40, duration: 0.7 }, 0.3);
+  if (stars) tl.to(stars, { opacity: 0.35, duration: 0.4 }, 0.45);
+  tl.from('[data-turn-after]', { opacity: 0, y: 30, duration: 0.15 }, 0.72).to({}, { duration: 0.15 });
 }
 
-/** Contenido del ebook: recorrido horizontal en escritorio. */
+/** "Aquí es donde todo cambia": los cuatro verbos aparecen uno tras otro. */
+function verbs() {
+  const list = $('[data-verbs]');
+  if (!list) return;
+  gsap.from($$('li', list), {
+    opacity: 0,
+    y: 40,
+    duration: 1,
+    ease: 'expo.out',
+    stagger: 0.12,
+    scrollTrigger: { trigger: list, start: 'top 80%', once: true },
+  });
+}
+
+/** Contenido del ebook: recorrido horizontal en escritorio; medallón fijo que cambia en móvil. */
 function horizontalContents(mm: gsap.MatchMedia) {
   mm.add('(min-width: 1000px)', () => {
     const pin = $('[data-hscroll]');
     const track = $('[data-hscroll-track]');
     if (!pin || !track) return;
-    const distance = () => track.scrollWidth - innerWidth;
+    const panels = $$('[data-panel]', track);
+    const count = $('[data-ct-count]');
+    const bar = $('[data-ct-progress]');
+    // Se calcula por paneles (no con scrollWidth, que incluye el texto desplazado por el parallax).
+    const distance = () => (panels.length - 1) * panels[0].offsetWidth;
     const tween = gsap.to(track, {
       x: () => -distance(),
       ease: 'none',
@@ -161,16 +179,52 @@ function horizontalContents(mm: gsap.MatchMedia) {
         scrub: 0.8,
         invalidateOnRefresh: true,
         anticipatePin: 1,
+        onUpdate: (self) => {
+          const i = Math.min(panels.length - 1, Math.round(self.progress * (panels.length - 1)));
+          if (count) count.textContent = String(i + 1);
+          if (bar) bar.style.transform = `scaleX(${(i + 1) / panels.length})`;
+        },
       },
     });
-    // Cada medallón gira un poco mientras cruza la pantalla.
-    $$('[data-medal] img', track).forEach((img) => {
-      gsap.fromTo(img, { rotate: -8, scale: 0.92 }, {
-        rotate: 8,
-        scale: 1.04,
-        ease: 'none',
-        scrollTrigger: { trigger: img, containerAnimation: tween, start: 'left right', end: 'right left', scrub: true },
+    // Las imágenes de los paneles están fuera de pantalla en horizontal: se piden antes de llegar.
+    ScrollTrigger.create({
+      trigger: pin,
+      start: 'top 300%',
+      once: true,
+      onEnter: () => $$<HTMLImageElement>('img', track).forEach((img) => (img.loading = 'eager')),
+    });
+    panels.forEach((panel) => {
+      const st = { containerAnimation: tween, trigger: panel, start: 'left right', end: 'right left', scrub: true };
+      // Tres velocidades: órbitas, medallón y texto se desplazan distinto dentro de cada panel.
+      gsap.fromTo($('[data-ct-orbits]', panel), { rotate: -50 }, { rotate: 50, ease: 'none', scrollTrigger: st });
+      gsap.fromTo($('[data-medal] img', panel), { rotate: -12, scale: 0.9 }, { rotate: 12, scale: 1.05, ease: 'none', scrollTrigger: st });
+      gsap.fromTo($('[data-ct-text]', panel), { x: 140 }, { x: -140, ease: 'none', scrollTrigger: st });
+    });
+  });
+
+  mm.add('(max-width: 999px)', () => {
+    const imgs = $$('[data-stage-img]');
+    const dots = $$('[data-stage-dot]');
+    const panels = $$('[data-panel]');
+    const medal = $('.ct__stage-medal');
+    if (!imgs.length || !medal) return;
+    const setActive = (i: number) => {
+      imgs.forEach((el, j) => el.classList.toggle('is-active', i === j));
+      dots.forEach((el, j) => el.classList.toggle('is-active', i === j));
+    };
+    panels.forEach((panel, i) => {
+      ScrollTrigger.create({
+        trigger: panel,
+        start: 'top 62%',
+        end: 'bottom 62%',
+        onToggle: (self) => self.isActive && setActive(i),
       });
+    });
+    // El medallón gira despacio mientras se recorre toda la lista de capítulos.
+    gsap.fromTo(medal, { rotate: -20 }, {
+      rotate: 20,
+      ease: 'none',
+      scrollTrigger: { trigger: '[data-hscroll]', start: 'top bottom', end: 'bottom top', scrub: true },
     });
   });
 }
@@ -322,6 +376,7 @@ export function init() {
   priceStrikes();
   painLines();
   turnScene();
+  verbs();
   horizontalContents(mm);
   sealAndFinale();
   goldThread(mm);

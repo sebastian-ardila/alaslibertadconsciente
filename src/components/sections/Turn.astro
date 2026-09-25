@@ -4,6 +4,7 @@ import CtaButton from '../CtaButton.astro';
 import Starfield from '../Starfield.astro';
 
 const gems = ['var(--gema-zafiro)', 'var(--gema-esmeralda)', 'var(--gema-amatista)', 'var(--gema-rubi)'];
+const keyWords = turn.key.split(' ');
 ---
 <section class="turn" aria-labelledby="turn-title">
   <div class="turn__intro sec is-deep">
@@ -13,16 +14,20 @@ const gems = ['var(--gema-zafiro)', 'var(--gema-esmeralda)', 'var(--gema-amatist
     </div>
   </div>
 
-  <!-- Escena del amanecer: con JS se fija en pantalla y pasa de noche a alba -->
+  <!-- Escena del amanecer: con JS se fija en pantalla y un sol dorado sube detrás del texto.
+       El texto siempre queda claro sobre azul, en cualquier punto de la animación. -->
   <div class="turn__stage" data-turn>
     <div class="turn__dawn" aria-hidden="true"></div>
-    <div class="turn__night" aria-hidden="true" data-turn-night>
-      <Starfield seed={29} density={0.7} />
+    <div class="turn__night" aria-hidden="true" data-turn-night></div>
+    <Starfield seed={29} density={0.7} />
+    <div class="turn__sun" aria-hidden="true" data-turn-sun>
+      <span class="turn__rays"></span>
     </div>
-    <div class="turn__sun" aria-hidden="true" data-turn-sun></div>
     <div class="turn__words wrap">
       <p class="turn__lead t-1" data-turn-lead>{turn.lead}</p>
-      <p class="turn__key t-lirica" data-turn-key>{turn.key}</p>
+      <p class="turn__key t-lirica">
+        {keyWords.map((w) => <span class="turn__w" data-turn-word>{w} </span>)}
+      </p>
       <div class="turn__after t-1" data-turn-after>
         {turn.after.map((p) => <p>{p}</p>)}
       </div>
@@ -30,19 +35,24 @@ const gems = ['var(--gema-zafiro)', 'var(--gema-esmeralda)', 'var(--gema-amatist
   </div>
 
   <div class="turn__change sec is-light">
-    <div class="turn__change-grid wrap">
-      <div>
-        <h3 class="t-display t-3">{turn.changeTitle}</h3>
+    <div class="wrap">
+      <header class="turn__change-head">
+        <h3 class="t-display t-4">{turn.changeTitle}</h3>
         <p class="turn__change-body t-1 muted">{turn.changeBody}</p>
-      </div>
-      <div>
-        <p class="turn__real t-lirica t-2">{turn.realLabel}</p>
-        <ul class="turn__verbs" role="list">
-          {turn.verbs.map((v, i) => (
-            <li style={`--gem:${gems[i]}`}>{v}</li>
-          ))}
-        </ul>
-        <p class="turn__closing">{turn.closing}</p>
+      </header>
+
+      <p class="turn__real t-lirica t-2">{turn.realLabel}</p>
+      <ul class="turn__verbs" role="list" data-verbs>
+        {turn.verbs.map((v, i) => (
+          <li style={`--gem:${gems[i]}`}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0C12.8 8 16 11.2 24 12 16 12.8 12.8 16 12 24 11.2 16 8 12.8 0 12 8 11.2 11.2 8 12 0Z" /></svg>
+            <span>{v}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="turn__end">
+        <p class="turn__closing t-1">{turn.closing}</p>
         <CtaButton label={cta.start} id="giro" variant="noche" />
       </div>
     </div>
@@ -60,84 +70,98 @@ const gems = ['var(--gema-zafiro)', 'var(--gema-esmeralda)', 'var(--gema-amatist
   }
   .turn__intro h2 { color: var(--perla); max-width: 15ch; }
   .turn__body { max-width: 36ch; padding-bottom: 0.4em; }
-  @media (max-width: 799px) { .turn__intro-grid { grid-template-columns: 1fr; } }
 
+  /* ── Escena ── */
   .turn__stage {
-    --ink: var(--noche);
     position: relative;
     min-height: 100svh;
     display: grid;
     place-items: center;
     overflow: hidden;
-    color: var(--ink);
+    color: var(--perla);
     text-align: center;
   }
+  /* Estado final (y estado sin JS): cielo de madrugada con horizonte dorado */
   .turn__dawn {
     position: absolute;
     inset: 0;
-    background:
-      radial-gradient(70% 55% at 50% 100%, #fff6e3 0%, rgb(255 246 227 / 0) 70%),
-      linear-gradient(180deg, #c9d7ee 0%, var(--alba) 55%, #f6f1e4 100%);
+    background: linear-gradient(180deg, var(--noche-hondo) 0%, #0e2556 38%, #1d3f86 62%, #6d6a8c 82%, #d9b877 94%, var(--alba) 100%);
   }
   .turn__night {
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg, var(--noche-hondo), var(--noche));
-    opacity: 0; /* sin JS se muestra el amanecer ya resuelto */
+    opacity: 0;
   }
   .turn__sun {
     position: absolute;
     left: 50%;
-    bottom: -40vmin;
-    width: 80vmin;
+    bottom: -48vmin;
+    width: 96vmin;
     aspect-ratio: 1;
     translate: -50% 0;
     border-radius: 50%;
-    background: radial-gradient(closest-side, rgb(230 205 148 / 0.9), rgb(230 205 148 / 0.25) 55%, transparent);
+    background: radial-gradient(closest-side, #fff1cf 0%, rgb(230 205 148 / 0.85) 28%, rgb(230 205 148 / 0.25) 55%, transparent 72%);
     pointer-events: none;
   }
-  .turn__words { position: relative; padding-block: 6rem; }
-  .turn__lead { color: inherit; opacity: 0.85; }
+  .turn__rays {
+    position: absolute;
+    inset: -20%;
+    border-radius: 50%;
+    background: repeating-conic-gradient(from 0deg, rgb(230 205 148 / 0.12) 0deg 2deg, transparent 2deg 12deg);
+    mask: radial-gradient(closest-side, #000 35%, transparent 75%);
+  }
+  .turn__words { position: relative; z-index: 1; padding-block: 5rem 22vh; }
+  .turn__lead { color: var(--oro-claro); }
   .turn__key {
-    margin-block: 0.15em 0.35em;
-    font-size: clamp(3.4rem, 1rem + 10vw, 11rem);
-    line-height: 0.95;
-    color: inherit;
+    margin-block: 0.2em 0.4em;
+    font-size: clamp(3.2rem, 0.8rem + 9vw, 10rem);
+    line-height: 1;
+    color: var(--perla);
+    text-wrap: balance;
+    text-shadow: 0 10px 50px rgb(6 14 34 / 0.45);
   }
-  .turn__after { display: grid; gap: 0.35rem; opacity: 0.9; }
+  .turn__w { display: inline-block; white-space: pre; }
+  .turn__after { display: grid; gap: 0.35rem; color: var(--alba); }
 
-  .turn__change-grid {
+  /* ── Aquí es donde todo cambia ── */
+  .turn__change-head { text-align: center; max-width: 44rem; margin-inline: auto; }
+  .turn__change h3 { color: var(--noche); }
+  .turn__change-body { margin: 1.25rem auto 0; max-width: 32ch; }
+  .turn__real { margin-top: clamp(3.5rem, 7vw, 5.5rem); text-align: center; color: var(--oro-tinta); }
+  .turn__verbs {
+    margin-top: 2rem;
     display: grid;
-    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    gap: clamp(2.5rem, 6vw, 6rem);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    border-block: 1px solid rgb(17 28 56 / 0.12);
   }
-  .turn__change h3 { color: var(--noche); max-width: 12ch; }
-  .turn__change-body { margin-top: 1.25rem; max-width: 30ch; }
-  .turn__real { color: var(--oro-tinta); }
-  .turn__verbs { margin: 1rem 0 1.75rem; }
   .turn__verbs li {
-    display: flex;
-    align-items: baseline;
-    gap: 1rem;
-    padding-block: 0.55rem;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 1.1rem;
+    padding: clamp(2rem, 4vw, 3rem) clamp(1rem, 2vw, 2rem);
+    text-align: center;
     font-family: var(--f-display);
     font-weight: 500;
-    font-size: var(--s-3);
-    line-height: 1.05;
+    font-size: var(--s-2);
+    line-height: 1.15;
     color: var(--noche);
   }
-  .turn__verbs li::before {
-    content: '';
-    flex: none;
-    width: 0.32em;
-    height: 0.32em;
-    background: var(--gem);
-    -webkit-mask: var(--star-mask) center / contain no-repeat;
-    mask: var(--star-mask) center / contain no-repeat;
-    transform: translateY(-0.12em);
+  .turn__verbs li + li { border-left: 1px solid rgb(17 28 56 / 0.12); }
+  .turn__verbs svg { width: 1.6rem; height: 1.6rem; color: var(--gem); }
+  .turn__end { margin-top: clamp(2.5rem, 5vw, 3.5rem); display: grid; justify-items: center; gap: 1.5rem; text-align: center; }
+  .turn__closing { font-weight: 600; color: var(--tinta); }
+
+  @media (max-width: 899px) {
+    .turn__verbs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .turn__verbs li:nth-child(3) { border-left: 0; }
+    .turn__verbs li:nth-child(n + 3) { border-top: 1px solid rgb(17 28 56 / 0.12); }
   }
-  .turn__closing { margin-bottom: 2rem; font-weight: 600; color: var(--tinta); }
   @media (max-width: 799px) {
-    .turn__change-grid { grid-template-columns: 1fr; }
+    .turn__intro-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 479px) {
+    .turn__verbs li { font-size: var(--s-1); padding-inline: 0.75rem; }
   }
 </style>

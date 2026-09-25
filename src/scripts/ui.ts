@@ -51,11 +51,15 @@ function headerAndSticky() {
     const goingUp = y < lastY - 4;
     if (goingDown && y > 600) header?.classList.add('is-hidden');
     if (goingUp) header?.classList.remove('is-hidden');
+    document.body.classList.toggle('hd-hidden', !!header?.classList.contains('is-hidden'));
     lastY = y;
   };
   addEventListener('scroll', onScroll, { passive: true });
   // Si el foco entra al header oculto (teclado), se muestra.
-  header?.addEventListener('focusin', () => header.classList.remove('is-hidden'));
+  header?.addEventListener('focusin', () => {
+    header.classList.remove('is-hidden');
+    document.body.classList.remove('hd-hidden');
+  });
   onScroll();
 }
 

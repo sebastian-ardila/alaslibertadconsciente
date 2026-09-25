@@ -15,6 +15,7 @@ const images = {
   brujula: { src: brujula, alt: 'Ilustración: una brújula y un camino dorado, símbolo de orientación' },
   mariposa: { src: mariposa, alt: 'Ilustración: una mariposa dorada rodeada de estrellas, símbolo de transformación' },
 } as const;
+const total = contents.blocks.length;
 ---
 <section class="ct is-light" aria-labelledby="ct-title">
   <div class="ct__head sec wrap">
@@ -22,23 +23,53 @@ const images = {
     <p class="ct__intro t-1 muted">{contents.intro}</p>
   </div>
 
+  <!-- Móvil con movimiento: medallón fijo que cambia según el capítulo que se está leyendo -->
+  <div class="ct__stage" aria-hidden="true" data-ct-stage>
+    <div class="ct__stage-medal">
+      {contents.blocks.map((b, i) => (
+        <div class:list={['ct__stage-img', i === 0 && 'is-active']} data-stage-img>
+          <Picture src={images[b.image].src} formats={['avif', 'webp']} widths={[360, 560]} sizes="52vw" alt="" />
+        </div>
+      ))}
+    </div>
+    <div class="ct__dots">
+      {contents.blocks.map((_, i) => <span class:list={[i === 0 && 'is-active']} data-stage-dot></span>)}
+    </div>
+  </div>
+
   <div class="ct__pin" data-hscroll>
+    <!-- Escritorio con movimiento: progreso del recorrido horizontal -->
+    <div class="ct__bar wrap" aria-hidden="true">
+      <p class="ct__count t-lirica"><span data-ct-count>1</span> de {total}</p>
+      <div class="ct__progress"><span data-ct-progress></span></div>
+    </div>
+
     <ol class="ct__track" role="list" data-hscroll-track>
-      {contents.blocks.map((b) => {
+      {contents.blocks.map((b, i) => {
         const img = images[b.image];
         return (
           <li class="ct__panel" data-panel>
-            <div class="ct__medal" data-medal>
-              <Picture src={img.src} formats={['avif', 'webp']} widths={[360, 560, 800]} sizes="(min-width: 900px) 30vw, 70vw" alt={img.alt} />
-            </div>
-            <div class="ct__text">
-              <h3 class="t-display t-2">{b.title}</h3>
-              {'intro' in b && b.intro && <p class="ct__p">{b.intro}</p>}
-              {'listLabel' in b && b.listLabel && <p class="ct__label t-lirica">{b.listLabel}</p>}
-              <ul class="star-list" role="list">
-                {b.items.map((it) => <li>{it}</li>)}
-              </ul>
-              {'outro' in b && b.outro && <p class="ct__outro">{b.outro}</p>}
+            <div class="ct__panel-in">
+              <div class="ct__visual">
+                <svg class="ct__orbits" viewBox="0 0 600 600" aria-hidden="true" data-ct-orbits>
+                  <circle cx="300" cy="300" r="296" />
+                  <circle cx="300" cy="300" r="270" stroke-dasharray="1 8" />
+                  <path d="M300 0c1.4 13 7 18.6 20 20-13 1.4-18.6 7-20 20-1.4-13-7-18.6-20-20 13-1.4 18.6-7 20-20z" />
+                </svg>
+                <div class="ct__medal" data-medal>
+                  <Picture src={img.src} formats={['avif', 'webp']} widths={[360, 560, 800]} sizes="(min-width: 1000px) 30vw, 70vw" alt={img.alt} />
+                </div>
+              </div>
+              <div class="ct__text" data-ct-text>
+                <p class="ct__num t-lirica" aria-hidden="true">{i + 1} de {total}</p>
+                <h3 class="t-display">{b.title}</h3>
+                {'intro' in b && b.intro && <p class="ct__p">{b.intro}</p>}
+                {'listLabel' in b && b.listLabel && <p class="ct__label t-lirica">{b.listLabel}</p>}
+                <ul class="star-list" role="list">
+                  {b.items.map((it) => <li>{it}</li>)}
+                </ul>
+                {'outro' in b && b.outro && <p class="ct__outro">{b.outro}</p>}
+              </div>
             </div>
           </li>
         );
@@ -59,64 +90,156 @@ const images = {
   .ct__head h2 { color: var(--noche); max-width: 17ch; }
   .ct__intro { margin-top: 1.25rem; max-width: 46ch; }
 
+  /* ── Base (sin JS, movimiento reducido): capítulos apilados ── */
+  .ct__stage, .ct__bar { display: none; }
   .ct__track {
     display: grid;
-    gap: clamp(4rem, 10vw, 6rem);
+    gap: clamp(4.5rem, 10vw, 7rem);
     width: min(100% - 2 * var(--gutter), var(--wrap));
     margin-inline: auto;
   }
-  .ct__panel {
+  .ct__panel-in {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
-    gap: clamp(2rem, 5vw, 5rem);
+    gap: clamp(2rem, 6vw, 6rem);
     align-items: center;
   }
+  .ct__visual { position: relative; display: grid; place-items: center; }
+  .ct__orbits {
+    position: absolute;
+    inset: -7%;
+    width: 114%;
+    height: 114%;
+    max-width: none;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .ct__orbits circle { fill: none; stroke: var(--oro); stroke-width: 1; opacity: 0.55; vector-effect: non-scaling-stroke; }
+  .ct__orbits path { fill: var(--oro); }
   .ct__medal {
     position: relative;
+    width: 100%;
+    max-width: 30rem;
     aspect-ratio: 1;
     border-radius: 50%;
     background: radial-gradient(circle at 50% 40%, #16306b, var(--noche) 70%);
-    box-shadow: 0 0 0 1px rgb(200 161 90 / 0.6), 0 0 0 10px var(--alba), 0 0 0 11px rgb(200 161 90 / 0.35), 0 40px 70px -30px rgb(10 23 51 / 0.55);
+    box-shadow: 0 0 0 1px rgb(200 161 90 / 0.6), 0 40px 70px -30px rgb(10 23 51 / 0.55);
     overflow: hidden;
-    max-width: 30rem;
   }
-  .ct__medal :global(picture), .ct__medal :global(img) { width: 100%; height: 100%; }
-  .ct__medal :global(img) { object-fit: contain; transform: scale(1.02); }
-  .ct__text h3 { color: var(--noche); max-width: 20ch; }
-  .ct__p { margin-top: 1.25rem; color: var(--tinta-2); max-width: 48ch; }
+  .ct__medal :global(picture), .ct__medal :global(img),
+  .ct__stage-img :global(picture), .ct__stage-img :global(img) { display: block; width: 100%; height: 100%; }
+  .ct__medal :global(img), .ct__stage-img :global(img) { object-fit: contain; }
+
+  .ct__num { color: var(--oro-tinta); font-size: var(--s-1); margin-bottom: 0.5rem; }
+  .ct__text h3 { color: var(--noche); font-size: var(--s-3); line-height: 1.08; max-width: 18ch; }
+  .ct__p { margin-top: 1.25rem; color: var(--tinta-2); max-width: 46ch; }
   .ct__label { margin-top: 1.75rem; font-size: var(--s-1); color: var(--oro-tinta); }
-  .ct__text .star-list { margin-top: 1.1rem; max-width: 48ch; }
-  .ct__outro { margin-top: 1.75rem; font-weight: 600; color: var(--azul); max-width: 44ch; }
+  .ct__text .star-list { margin-top: 1.1rem; max-width: 46ch; }
+  .ct__outro { margin-top: 1.75rem; padding-top: 1.25rem; border-top: 1px solid rgb(17 28 56 / 0.12); font-weight: 600; color: var(--azul); max-width: 44ch; }
 
   .ct__close { display: grid; justify-items: start; gap: 2.5rem; padding-top: clamp(4rem, 8vw, 6rem); }
   .ct__lines { display: grid; color: var(--noche); }
 
-  /* Escritorio con JS y movimiento: recorrido horizontal fijado */
+  @media (max-width: 799px) {
+    .ct__panel-in { grid-template-columns: 1fr; }
+    .ct__visual { width: 76%; margin-inline: auto; }
+  }
+
+  /* ── Escritorio con movimiento: un capítulo por pantalla, recorrido horizontal ── */
   @media (min-width: 1000px) {
     :global(html.motion) .ct__head { padding-bottom: 0; }
     :global(html.motion) .ct__close { padding-top: clamp(2rem, 4vw, 3rem); }
-    :global(html.motion) .ct__pin { height: 100vh; overflow: hidden; display: flex; align-items: center; }
+    :global(html.motion) .ct__pin {
+      position: relative;
+      height: 100vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      grid-template-columns: minmax(0, 100%);
+    }
+    :global(html.motion) .ct__bar {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      padding-top: calc(4.5rem + 1.5rem);
+    }
+    :global(html.motion) .ct__count { flex: none; color: var(--oro-tinta); font-size: var(--s-1); min-width: 4.5ch; }
+    :global(html.motion) .ct__progress { flex: 1; height: 1px; background: rgb(17 28 56 / 0.15); }
+    :global(html.motion) .ct__progress span { display: block; height: 100%; background: var(--oro); transform-origin: left; transform: scaleX(0.2); }
     :global(html.motion) .ct__track {
       display: flex;
       width: max-content;
       gap: 0;
       margin: 0;
-      padding-inline: var(--gutter);
+      align-items: center;
     }
-    :global(html.motion) .ct__panel {
-      width: min(88vw, 1200px);
-      padding-right: clamp(4rem, 8vw, 9rem);
-      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
-      gap: clamp(3rem, 6vw, 6rem);
+    :global(html.motion) .ct__panel { width: 100vw; display: grid; place-items: center; }
+    :global(html.motion) .ct__panel-in {
+      width: min(100vw - 2 * var(--gutter), var(--wrap));
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: clamp(3rem, 7vw, 8rem);
     }
-    :global(html.motion) .ct__medal { max-width: min(28rem, 58vh); justify-self: center; width: 100%; }
-    /* En pantallas bajas el texto del panel se compacta un poco para caber en la altura */
-    @media (max-height: 760px) {
-      :global(html.motion) .ct__text { font-size: 0.94rem; }
-    }
+    :global(html.motion) .ct__visual { width: min(100%, 64vh); justify-self: center; }
+    :global(html.motion) .ct__num { display: none; }
   }
-  @media (max-width: 799px) {
-    .ct__panel { grid-template-columns: 1fr; }
-    .ct__medal { width: 78%; margin-inline: auto; }
+  @media (min-width: 1000px) and (max-height: 760px) {
+    :global(html.motion) .ct__text { font-size: 0.94rem; }
+    :global(html.motion) .ct__text h3 { font-size: var(--s-2); }
+  }
+
+  /* ── Móvil con movimiento: medallón fijo arriba, el texto se desliza debajo ── */
+  @media (max-width: 999px) {
+    :global(html.motion) .ct__stage {
+      display: grid;
+      justify-items: center;
+      gap: 0.9rem;
+      position: sticky;
+      top: 4.5rem;
+      z-index: 2;
+      transition: top 0.45s var(--ease-out);
+      padding: 1rem 0 1.25rem;
+      background: var(--alba);
+    }
+    :global(body.hd-hidden) .ct__stage { top: 0; }
+    /* Fundido bajo el medallón para que el texto entre suavemente por debajo */
+    :global(html.motion) .ct__stage::after {
+      content: '';
+      position: absolute;
+      inset: 100% 0 auto;
+      height: 2.5rem;
+      background: linear-gradient(180deg, var(--alba), rgb(232 238 247 / 0));
+      pointer-events: none;
+    }
+    :global(html.motion) .ct__stage-medal {
+      position: relative;
+      width: min(50vw, 15rem);
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: radial-gradient(circle at 50% 40%, #16306b, var(--noche) 70%);
+      box-shadow: 0 0 0 1px rgb(200 161 90 / 0.6), 0 0 0 8px var(--alba), 0 0 0 9px rgb(200 161 90 / 0.35), 0 30px 50px -25px rgb(10 23 51 / 0.6);
+      overflow: hidden;
+    }
+    :global(html.motion) .ct__stage-img {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: rotate(-25deg) scale(0.8);
+      transition: opacity 0.6s var(--ease-out), transform 0.9s var(--ease-out);
+    }
+    :global(html.motion) .ct__stage-img.is-active { opacity: 1; transform: none; }
+    :global(html.motion) .ct__dots { display: flex; gap: 0.5rem; }
+    :global(html.motion) .ct__dots span {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background: rgb(17 28 56 / 0.2);
+      transition: background-color 0.4s, transform 0.4s var(--ease-out);
+    }
+    :global(html.motion) .ct__dots span.is-active { background: var(--oro); transform: scale(1.4); }
+    :global(html.motion) .ct__visual { display: none; }
+    :global(html.motion) .ct__panel-in { grid-template-columns: 1fr; }
+    :global(html.motion) .ct__track { gap: 0; }
+    :global(html.motion) .ct__panel { padding-block: 2.5rem 3.5rem; min-height: 70vh; }
+    :global(html.motion) .ct__panel + .ct__panel { border-top: 1px solid rgb(17 28 56 / 0.1); }
   }
 </style>
