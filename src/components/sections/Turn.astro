@@ -7,7 +7,7 @@ const gems = ['var(--gema-zafiro)', 'var(--gema-esmeralda)', 'var(--gema-amatist
 ---
 <section class="turn" aria-labelledby="turn-title">
   <div class="turn__intro sec is-deep">
-    <div class="wrap">
+    <div class="turn__intro-grid wrap">
       <h2 id="turn-title" class="t-display t-4">{turn.title}</h2>
       <p class="turn__body t-1 muted">{turn.body}</p>
     </div>
@@ -50,9 +50,17 @@ const gems = ['var(--gema-zafiro)', 'var(--gema-esmeralda)', 'var(--gema-amatist
 </section>
 
 <style>
+  .turn { background: var(--noche-hondo); }
   .turn__intro { padding-bottom: clamp(3rem, 6vw, 5rem); }
+  .turn__intro-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 1.5rem clamp(2.5rem, 6vw, 6rem);
+    align-items: end;
+  }
   .turn__intro h2 { color: var(--perla); max-width: 15ch; }
-  .turn__body { margin-top: 1.5rem; max-width: 40ch; }
+  .turn__body { max-width: 36ch; padding-bottom: 0.4em; }
+  @media (max-width: 799px) { .turn__intro-grid { grid-template-columns: 1fr; } }
 
   .turn__stage {
     --ink: var(--noche);
@@ -113,6 +121,7 @@ const gems = ['var(--gema-zafiro)', 'var(--gema-esmeralda)', 'var(--gema-amatist
     gap: 1rem;
     padding-block: 0.55rem;
     font-family: var(--f-display);
+    font-weight: 500;
     font-size: var(--s-3);
     line-height: 1.05;
     color: var(--noche);

@@ -19,8 +19,8 @@
   --gema-zafiro: #2d62d6;
   --gema-amatista: #7a4bc2;
 
-  --f-display: 'Gloock', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
-  --f-lirica: 'Instrument Serif', 'Iowan Old Style', Georgia, serif;
+  --f-display: 'Josefin Sans Variable', 'Josefin Sans', 'Futura', 'Century Gothic', system-ui, sans-serif;
+  --f-lirica: var(--f-display);
   --f-texto: 'Hanken Grotesk Variable', 'Hanken Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   /* Escala fluida (≈1.25 en móvil, ≈1.4 en escritorio) */
@@ -34,7 +34,7 @@
 
   --gutter: clamp(1.25rem, 4.5vw, 4.5rem);
   --wrap: 1320px;
-  --sec-y: clamp(5.5rem, 12vw, 11rem);
+  --sec-y: clamp(4.5rem, 9vw, 8.5rem);
 
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   color-scheme: light;
@@ -77,7 +77,10 @@ p, li { text-wrap: pretty; }
   outline-offset: 4px;
   border-radius: 4px;
 }
-.is-light :focus-visible { outline-color: var(--azul); }
+.is-light :focus-visible,
+.is-pearl :focus-visible,
+.price :focus-visible { outline-color: var(--azul); }
+main:focus { outline: none; }
 
 .sr-only {
   position: absolute !important;
@@ -122,13 +125,16 @@ p, li { text-wrap: pretty; }
    ───────────────────────────────────────────── */
 .t-display {
   font-family: var(--f-display);
-  line-height: 0.98;
-  letter-spacing: -0.015em;
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
 }
+/* Frases líricas: la misma familia, ligera e inclinada, para contrastar con los titulares */
 .t-lirica {
   font-family: var(--f-lirica);
   font-style: italic;
-  line-height: 1.15;
+  font-weight: 350;
+  line-height: 1.22;
   letter-spacing: 0;
 }
 .t-5 { font-size: var(--s-5); }
@@ -193,6 +199,10 @@ p, li { text-wrap: pretty; }
 .btn:hover { background: var(--oro-claro); transform: translateY(-2px); }
 .btn:hover svg { transform: rotate(90deg) scale(1.15); }
 .btn:active { transform: translateY(0); }
+.btn span { text-wrap: balance; }
+@media (max-width: 559px) {
+  .btn { width: 100%; justify-content: center; text-align: center; padding-inline: 1.25rem; }
+}
 .btn--noche { --btn-bg: var(--noche); --btn-fg: var(--alba); box-shadow: 0 18px 40px -20px rgb(10 23 51 / 0.6); }
 .btn--noche:hover { background: var(--azul); }
 .btn--noche svg { color: var(--oro); }

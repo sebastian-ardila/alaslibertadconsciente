@@ -15,8 +15,9 @@ const { label, id, variant = 'oro', class: cls } = Astro.props;
   class:list={['btn', variant === 'noche' && 'btn--noche', cls]}
   href={CHECKOUT_URL}
   data-cta={id}
+  target="_blank"
   rel="noopener"
 >
   <Star />
-  <span>{label}</span>
+  <span>{label}<span class="sr-only"> (se abre en una pestaña nueva)</span></span>
 </a>

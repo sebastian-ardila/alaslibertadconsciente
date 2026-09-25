@@ -10,7 +10,7 @@ import { CHECKOUT_URL, PRODUCT, WHATSAPP_URL } from '../content/landing';
     </a>
     <nav aria-label="Acciones">
       <a class="hd__link" href={WHATSAPP_URL} target="_blank" rel="noopener">¿Dudas? Escríbenos<span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span></a>
-      <a class="hd__buy" href={CHECKOUT_URL} data-cta="header">Comprar por ${PRODUCT.price} {PRODUCT.currency}</a>
+      <a class="hd__buy" href={CHECKOUT_URL} data-cta="header" target="_blank" rel="noopener">Comprar por ${PRODUCT.price} {PRODUCT.currency}<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
     </nav>
   </div>
 </header>
@@ -41,6 +41,9 @@ import { CHECKOUT_URL, PRODUCT, WHATSAPP_URL } from '../content/landing';
   .hd__logo img { width: clamp(64px, 6vw, 82px); height: auto; }
   nav { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2rem); }
   .hd__link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
     font-size: var(--s--1);
     text-decoration: underline;
     text-decoration-color: rgb(200 161 90 / 0.6);
@@ -48,7 +51,10 @@ import { CHECKOUT_URL, PRODUCT, WHATSAPP_URL } from '../content/landing';
   }
   .hd__link:hover { text-decoration-color: var(--oro-claro); }
   .hd__buy {
-    padding: 0.65rem 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5rem 1.2rem;
     border: 1px solid var(--oro);
     border-radius: 999px;
     font-size: var(--s--1);

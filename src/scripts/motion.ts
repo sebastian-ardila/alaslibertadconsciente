@@ -113,9 +113,8 @@ function painLines() {
   $$('[data-scrub-lines]').forEach((list) => {
     $$('li', list).forEach((li) => {
       // Arranca en un tono atenuado que igual cumple contraste AA (≈5.5:1).
-      gsap.fromTo(li, { color: '#7d89a3', x: -12 }, {
+      gsap.fromTo(li, { color: '#7d89a3' }, {
         color: '#e8eef7',
-        x: 0,
         ease: 'none',
         scrollTrigger: { trigger: li, start: 'top 88%', end: 'top 58%', scrub: true },
       });
