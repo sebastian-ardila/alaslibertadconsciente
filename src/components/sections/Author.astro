@@ -1,0 +1,48 @@
+---
+import { Picture } from 'astro:assets';
+import img from '../../assets/img/claudia-palacio.png';
+import { author } from '../../content/landing';
+import ArchFrame from '../ArchFrame.astro';
+---
+<section class="au sec is-light" aria-labelledby="au-title">
+  <div class="au__grid wrap">
+    <div class="au__media">
+      <ArchFrame>
+        <Picture src={img} formats={['avif', 'webp']} widths={[480, 720, 1080]} sizes="(min-width: 900px) 34vw, 88vw" alt="Claudia Palacio en un jardín, con las manos sobre el corazón" />
+      </ArchFrame>
+    </div>
+    <div class="au__copy">
+      <h2 id="au-title" class="au__q t-lirica t-2">{author.title}</h2>
+      <p class="au__name t-display t-4" data-thread="right">{author.name}</p>
+      <div class="au__bio">
+        {author.bio.map((p, i) => <p class:list={[i === 0 && 'au__first t-1']}>{p}</p>)}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .au__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    align-items: start;
+  }
+  .au__media { position: sticky; top: 7rem; max-width: 30rem; }
+  .au__q { color: var(--oro-tinta); }
+  .au__name { margin-top: 0.2em; color: var(--noche); }
+  .au__bio { margin-top: 2rem; display: grid; gap: 1.1rem; max-width: 60ch; color: var(--tinta-2); }
+  .au__first { color: var(--tinta); }
+  .au__first::first-letter {
+    float: left;
+    margin: 0.08em 0.12em 0 0;
+    font-family: var(--f-display);
+    font-size: 3.6em;
+    line-height: 0.8;
+    color: var(--azul);
+  }
+  @media (max-width: 899px) {
+    .au__grid { grid-template-columns: 1fr; }
+    .au__media { position: static; width: 80%; margin-inline: auto; }
+  }
+</style>

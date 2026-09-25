@@ -1,0 +1,22 @@
+---
+import { CHECKOUT_URL } from '../content/landing';
+import Star from './Star.astro';
+
+interface Props {
+  label: string;
+  /** Identificador de la ubicación, para medir qué botón convierte. */
+  id: string;
+  variant?: 'oro' | 'noche';
+  class?: string;
+}
+const { label, id, variant = 'oro', class: cls } = Astro.props;
+---
+<a
+  class:list={['btn', variant === 'noche' && 'btn--noche', cls]}
+  href={CHECKOUT_URL}
+  data-cta={id}
+  rel="noopener"
+>
+  <Star />
+  <span>{label}</span>
+</a>

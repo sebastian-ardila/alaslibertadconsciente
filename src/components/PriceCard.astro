@@ -1,0 +1,142 @@
+---
+import { PRODUCT, price, cta } from '../content/landing';
+import CtaButton from './CtaButton.astro';
+import Star from './Star.astro';
+
+interface Props { id: string; headingLevel?: 'h2' | 'h3' }
+const { id, headingLevel = 'h2' } = Astro.props;
+const Heading = headingLevel;
+---
+<article class="price" aria-labelledby={`${id}-title`} data-price>
+  <div class="price__halo" aria-hidden="true"></div>
+  <Star class="price__star" />
+  <Heading id={`${id}-title`} class="sr-only">Precio de {PRODUCT.name}</Heading>
+
+  <p class="price__was">
+    <span>{price.regularLabel}</span>
+    <s>
+      <span class="sr-only">antes</span>${PRODUCT.regularPrice} {PRODUCT.currency}
+      <svg class="price__strike" viewBox="0 0 120 20" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M2 14C30 9 70 6 118 4" pathLength="1" />
+      </svg>
+    </s>
+  </p>
+  <p class="price__now t-display">
+    <span class="sr-only">ahora</span><span class="price__cur">$</span>{PRODUCT.price}<span class="price__code">{PRODUCT.currency}</span>
+  </p>
+
+  <div class="price__body">
+    <p class="price__label t-lirica">{price.includesLabel}</p>
+    <ul class="star-list" role="list">
+      {price.includes.map((item) => <li>{item}</li>)}
+    </ul>
+    <p class="price__access">{price.access}</p>
+  </div>
+
+  <CtaButton label={cta.step} id={id} class="price__cta" />
+  <p class="price__note">Garantía de 7 días y pago seguro con Hotmart</p>
+</article>
+
+<style>
+  .price {
+    position: relative;
+    isolation: isolate;
+    width: min(100%, 30rem);
+    margin-inline: auto;
+    padding: clamp(4.5rem, 10vw, 6.5rem) clamp(1.5rem, 5vw, 3rem) clamp(2rem, 5vw, 3rem);
+    background: var(--perla);
+    color: var(--tinta);
+    border-radius: 100vmax 100vmax 1.25rem 1.25rem;
+    text-align: center;
+    box-shadow: 0 50px 90px -40px rgb(0 0 0 / 0.55);
+  }
+  .price::after {
+    content: '';
+    position: absolute;
+    inset: 0.6rem;
+    border: 1px solid rgb(200 161 90 / 0.65);
+    border-radius: 100vmax 100vmax 0.8rem 0.8rem;
+    pointer-events: none;
+  }
+  .price__halo {
+    position: absolute;
+    inset: -12% -20% auto;
+    height: 70%;
+    background: radial-gradient(closest-side, rgb(230 205 148 / 0.35), transparent);
+    z-index: -1;
+    pointer-events: none;
+  }
+  .price :global(.price__star) {
+    width: 1.75rem;
+    height: 1.75rem;
+    margin: 0 auto 1rem;
+    color: var(--oro);
+  }
+  .price__was {
+    display: flex;
+    justify-content: center;
+    gap: 0.5em;
+    color: var(--tinta-2);
+    font-size: var(--s-0);
+  }
+  .price__was s {
+    position: relative;
+    text-decoration: none;
+    font-weight: 600;
+  }
+  .price__strike {
+    position: absolute;
+    left: -6%;
+    top: 20%;
+    width: 112%;
+    height: 70%;
+    overflow: visible;
+  }
+  .price__strike path {
+    fill: none;
+    stroke: var(--gema-rubi);
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    vector-effect: non-scaling-stroke;
+  }
+  .price__now {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-block: 0.15em 0.35em;
+    font-size: clamp(5.5rem, 4rem + 8vw, 8.5rem);
+    line-height: 0.9;
+    color: var(--noche);
+  }
+  .price__cur { font-size: 0.4em; margin-top: 0.15em; margin-right: 0.05em; }
+  .price__code {
+    font-family: var(--f-texto);
+    font-size: 0.14em;
+    font-weight: 650;
+    letter-spacing: 0.04em;
+    margin-top: 0.55em;
+    margin-left: 0.4em;
+    color: var(--tinta-2);
+  }
+  .price__body {
+    text-align: left;
+    width: fit-content;
+    margin: 1.5rem auto 0;
+  }
+  .price__label { font-size: var(--s-1); margin-bottom: 0.6rem; color: var(--oro-tinta); }
+  .price__access {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgb(17 28 56 / 0.12);
+    font-weight: 650;
+    color: var(--azul);
+  }
+  .price :global(.price__cta) {
+    margin-top: 2rem;
+    width: 100%;
+    justify-content: center;
+    position: relative;
+    z-index: 1;
+  }
+  .price__note { margin-top: 0.9rem; font-size: var(--s--1); color: var(--tinta-2); }
+</style>

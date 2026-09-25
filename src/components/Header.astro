@@ -1,0 +1,62 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../assets/img/logo-alas-claro.png';
+import { CHECKOUT_URL, PRODUCT, WHATSAPP_URL } from '../content/landing';
+---
+<header class="hd" data-header>
+  <div class="hd__in wrap">
+    <a href="#inicio" class="hd__logo" aria-label="Alas Libertad Consciente, volver al inicio">
+      <Image src={logo} alt="" width={120} densities={[1, 2]} loading="eager" />
+    </a>
+    <nav aria-label="Acciones">
+      <a class="hd__link" href={WHATSAPP_URL} target="_blank" rel="noopener">¿Dudas? Escríbenos<span class="sr-only"> por WhatsApp (se abre en una pestaña nueva)</span></a>
+      <a class="hd__buy" href={CHECKOUT_URL} data-cta="header">Comprar por ${PRODUCT.price} {PRODUCT.currency}</a>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .hd {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: 50;
+    padding-top: env(safe-area-inset-top);
+    color: var(--alba);
+    transition: background-color 0.4s var(--ease-out), translate 0.45s var(--ease-out), box-shadow 0.4s;
+  }
+  :global(html:not(.js)) .hd,
+  .hd.is-solid {
+    background: rgb(6 14 34 / 0.88);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 1px 0 rgb(200 161 90 / 0.25);
+  }
+  .hd.is-hidden { translate: 0 -100%; }
+  .hd__in {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 4.5rem;
+  }
+  .hd__logo { display: block; padding-block: 0.6rem; }
+  .hd__logo img { width: clamp(64px, 6vw, 82px); height: auto; }
+  nav { display: flex; align-items: center; gap: clamp(1rem, 2.5vw, 2rem); }
+  .hd__link {
+    font-size: var(--s--1);
+    text-decoration: underline;
+    text-decoration-color: rgb(200 161 90 / 0.6);
+    text-underline-offset: 0.3em;
+  }
+  .hd__link:hover { text-decoration-color: var(--oro-claro); }
+  .hd__buy {
+    padding: 0.65rem 1.2rem;
+    border: 1px solid var(--oro);
+    border-radius: 999px;
+    font-size: var(--s--1);
+    font-weight: 650;
+    text-decoration: none;
+    color: var(--oro-claro);
+    transition: background-color 0.25s, color 0.25s;
+  }
+  .hd__buy:hover { background: var(--oro); color: var(--noche); }
+  @media (max-width: 560px) { .hd__link { display: none; } }
+</style>

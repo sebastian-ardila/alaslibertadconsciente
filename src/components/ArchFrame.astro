@@ -1,0 +1,47 @@
+---
+// Marco en arco para fotografías. La imagen interior se mueve con parallax (data-parallax-inner).
+interface Props { class?: string; tone?: 'oro' | 'azul' }
+const { class: cls, tone = 'oro' } = Astro.props;
+---
+<figure class:list={['arch', `arch--${tone}`, cls]}>
+  <div class="arch__clip">
+    <div class="arch__img" data-parallax-inner>
+      <slot />
+    </div>
+  </div>
+</figure>
+
+<style>
+  .arch {
+    position: relative;
+    isolation: isolate;
+    margin: 0;
+  }
+  .arch::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    translate: 1rem -1rem;
+    border: 1px solid var(--oro);
+    border-radius: 100vmax 100vmax 0 0;
+    z-index: -1;
+    opacity: 0.8;
+  }
+  .arch--azul::before { border-color: var(--azul); opacity: 0.45; }
+  .arch__clip {
+    overflow: hidden;
+    border-radius: 100vmax 100vmax 0 0;
+    aspect-ratio: 4 / 5;
+    background: var(--noche);
+  }
+  .arch__img {
+    height: 118%;
+    margin-top: -9%;
+  }
+  .arch__img :global(picture) { display: block; height: 100%; }
+  .arch__img :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+</style>

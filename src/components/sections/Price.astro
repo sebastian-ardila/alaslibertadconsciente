@@ -1,0 +1,23 @@
+---
+import PriceCard from '../PriceCard.astro';
+import Starfield from '../Starfield.astro';
+interface Props { id: string; seed?: number }
+const { id, seed = 3 } = Astro.props;
+---
+<section class="pz sec is-deep" aria-label="Precio y lo que incluye">
+  <Starfield seed={seed} density={0.6} />
+  <div class="pz__in wrap" data-thread="center">
+    <PriceCard id={id} />
+  </div>
+</section>
+
+<style>
+  .pz { overflow: hidden; }
+  .pz::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(50% 45% at 50% 55%, rgb(0 74 173 / 0.45), transparent 70%);
+  }
+  .pz__in { position: relative; }
+</style>

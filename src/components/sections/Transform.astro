@@ -1,0 +1,51 @@
+---
+import { Picture } from 'astro:assets';
+import img from '../../assets/img/mujer-luz.png';
+import { transform } from '../../content/landing';
+import ArchFrame from '../ArchFrame.astro';
+---
+<section class="tf sec is-pearl" aria-labelledby="tf-title">
+  <div class="tf__grid wrap">
+    <div class="tf__copy">
+      <h2 id="tf-title" class="t-display t-3">{transform.title}</h2>
+      <p class="tf__lead t-lirica t-2">{transform.lead}</p>
+      <ul class="tf__list star-list t-1" role="list">
+        {transform.items.map((it) => <li>{it}</li>)}
+      </ul>
+    </div>
+    <div class="tf__media" data-thread="right">
+      <ArchFrame>
+        <Picture src={img} formats={['avif', 'webp']} widths={[480, 720, 1024]} sizes="(min-width: 900px) 38vw, 88vw" alt="Mujer que sostiene entre sus manos una esfera de luz dorada, serena" />
+      </ArchFrame>
+    </div>
+  </div>
+
+  <div class="tf__finale wrap">
+    <p class="tf__pre t-1 muted">{transform.pre}</p>
+    <p class="tf__big t-lirica" data-finale>{transform.finale}</p>
+  </div>
+</section>
+
+<style>
+  .tf__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 6fr) minmax(0, 5fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    align-items: center;
+  }
+  .tf__copy h2 { color: var(--noche); max-width: 14ch; }
+  .tf__lead { margin-top: 1.5rem; color: var(--oro-tinta); }
+  .tf__list { margin-top: 1.5rem; gap: 1rem; color: var(--tinta); }
+  .tf__media { max-width: 30rem; justify-self: end; width: 100%; }
+  .tf__finale { margin-top: clamp(5rem, 11vw, 10rem); text-align: center; }
+  .tf__big {
+    margin-top: 0.3em;
+    font-size: clamp(3rem, 0.8rem + 9vw, 10rem);
+    line-height: 0.95;
+    color: var(--noche);
+  }
+  @media (max-width: 899px) {
+    .tf__grid { grid-template-columns: 1fr; }
+    .tf__media { justify-self: center; width: 80%; }
+  }
+</style>

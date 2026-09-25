@@ -1,0 +1,53 @@
+---
+import { Image } from 'astro:assets';
+import logo from '../../assets/img/logo-alas-claro.png';
+import { hero, cta, whatsapp, WHATSAPP_URL, PRODUCT } from '../../content/landing';
+import CtaButton from '../CtaButton.astro';
+import Starfield from '../Starfield.astro';
+const year = new Date().getFullYear();
+---
+<footer class="ft is-deep">
+  <Starfield seed={41} density={0.8} />
+  <div class="ft__cta sec wrap">
+    <p class="ft__title t-display t-4">{hero.closing}</p>
+    <div class="ft__actions">
+      <CtaButton label={cta.start} id="footer" />
+      <a class="ft__wa" href={WHATSAPP_URL} target="_blank" rel="noopener">{whatsapp.label}<span class="sr-only"> (se abre en una pestaña nueva)</span></a>
+    </div>
+  </div>
+  <div class="ft__base wrap">
+    <Image src={logo} alt="Alas Libertad Consciente" width={130} densities={[1, 2]} />
+    <p class="t-small muted">© {year} {PRODUCT.brand}. Pago procesado de forma segura por Hotmart.</p>
+  </div>
+</footer>
+
+<style>
+  .ft { position: relative; overflow: hidden; color: var(--alba); padding-bottom: calc(2rem + env(safe-area-inset-bottom)); }
+  .ft::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(60% 50% at 50% 0%, rgb(0 74 173 / 0.45), transparent 70%);
+  }
+  .ft__cta { position: relative; text-align: center; display: grid; justify-items: center; }
+  .ft__title { max-width: 18ch; color: var(--perla); }
+  .ft__actions { margin-top: 2.5rem; display: grid; justify-items: center; gap: 1.25rem; }
+  .ft__wa {
+    color: var(--oro-claro);
+    text-underline-offset: 0.3em;
+    text-decoration-color: rgb(230 205 148 / 0.5);
+    padding-block: 0.5rem;
+  }
+  .ft__base {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgb(180 192 216 / 0.15);
+  }
+  .ft__base img { width: 110px; height: auto; }
+  @media (max-width: 767px) { .ft { padding-bottom: calc(6.5rem + env(safe-area-inset-bottom)); } }
+</style>

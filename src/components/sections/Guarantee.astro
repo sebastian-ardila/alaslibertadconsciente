@@ -1,0 +1,35 @@
+---
+import { guarantee } from '../../content/landing';
+import GuaranteeSeal from '../GuaranteeSeal.astro';
+---
+<section class="gt sec is-night" aria-labelledby="gt-title">
+  <div class="gt__grid wrap">
+    <div class="gt__seal" data-seal data-thread="center"><GuaranteeSeal /></div>
+    <div>
+      <h2 id="gt-title" class="t-display t-3">{guarantee.title}</h2>
+      <div class="gt__body t-1">
+        <p>{guarantee.body[0]}</p>
+        <p class="gt__strong">{guarantee.body[1]}</p>
+        <p class="t-lirica t-2 gt__free">{guarantee.body[2]}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .gt__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 4fr) minmax(0, 6fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    align-items: center;
+  }
+  .gt__seal { justify-self: center; width: 100%; display: grid; place-items: center; }
+  .gt h2 { color: var(--perla); max-width: 15ch; }
+  .gt__body { margin-top: 1.5rem; display: grid; gap: 0.4rem; color: var(--niebla); }
+  .gt__strong { color: var(--alba); font-weight: 600; }
+  .gt__free { margin-top: 0.75rem; color: var(--oro-claro); }
+  @media (max-width: 799px) {
+    .gt__grid { grid-template-columns: 1fr; }
+    .gt__seal { width: 70%; }
+  }
+</style>

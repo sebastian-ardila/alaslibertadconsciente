@@ -1,0 +1,134 @@
+---
+import { turn, cta } from '../../content/landing';
+import CtaButton from '../CtaButton.astro';
+import Starfield from '../Starfield.astro';
+
+const gems = ['var(--gema-zafiro)', 'var(--gema-esmeralda)', 'var(--gema-amatista)', 'var(--gema-rubi)'];
+---
+<section class="turn" aria-labelledby="turn-title">
+  <div class="turn__intro sec is-deep">
+    <div class="wrap">
+      <h2 id="turn-title" class="t-display t-4">{turn.title}</h2>
+      <p class="turn__body t-1 muted">{turn.body}</p>
+    </div>
+  </div>
+
+  <!-- Escena del amanecer: con JS se fija en pantalla y pasa de noche a alba -->
+  <div class="turn__stage" data-turn>
+    <div class="turn__dawn" aria-hidden="true"></div>
+    <div class="turn__night" aria-hidden="true" data-turn-night>
+      <Starfield seed={29} density={0.7} />
+    </div>
+    <div class="turn__sun" aria-hidden="true" data-turn-sun></div>
+    <div class="turn__words wrap">
+      <p class="turn__lead t-1" data-turn-lead>{turn.lead}</p>
+      <p class="turn__key t-lirica" data-turn-key>{turn.key}</p>
+      <div class="turn__after t-1" data-turn-after>
+        {turn.after.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </div>
+
+  <div class="turn__change sec is-light">
+    <div class="turn__change-grid wrap">
+      <div>
+        <h3 class="t-display t-3">{turn.changeTitle}</h3>
+        <p class="turn__change-body t-1 muted">{turn.changeBody}</p>
+      </div>
+      <div>
+        <p class="turn__real t-lirica t-2">{turn.realLabel}</p>
+        <ul class="turn__verbs" role="list">
+          {turn.verbs.map((v, i) => (
+            <li style={`--gem:${gems[i]}`}>{v}</li>
+          ))}
+        </ul>
+        <p class="turn__closing">{turn.closing}</p>
+        <CtaButton label={cta.start} id="giro" variant="noche" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .turn__intro { padding-bottom: clamp(3rem, 6vw, 5rem); }
+  .turn__intro h2 { color: var(--perla); max-width: 15ch; }
+  .turn__body { margin-top: 1.5rem; max-width: 40ch; }
+
+  .turn__stage {
+    --ink: var(--noche);
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    color: var(--ink);
+    text-align: center;
+  }
+  .turn__dawn {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(70% 55% at 50% 100%, #fff6e3 0%, rgb(255 246 227 / 0) 70%),
+      linear-gradient(180deg, #c9d7ee 0%, var(--alba) 55%, #f6f1e4 100%);
+  }
+  .turn__night {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, var(--noche-hondo), var(--noche));
+    opacity: 0; /* sin JS se muestra el amanecer ya resuelto */
+  }
+  .turn__sun {
+    position: absolute;
+    left: 50%;
+    bottom: -40vmin;
+    width: 80vmin;
+    aspect-ratio: 1;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgb(230 205 148 / 0.9), rgb(230 205 148 / 0.25) 55%, transparent);
+    pointer-events: none;
+  }
+  .turn__words { position: relative; padding-block: 6rem; }
+  .turn__lead { color: inherit; opacity: 0.85; }
+  .turn__key {
+    margin-block: 0.15em 0.35em;
+    font-size: clamp(3.4rem, 1rem + 10vw, 11rem);
+    line-height: 0.95;
+    color: inherit;
+  }
+  .turn__after { display: grid; gap: 0.35rem; opacity: 0.9; }
+
+  .turn__change-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2.5rem, 6vw, 6rem);
+  }
+  .turn__change h3 { color: var(--noche); max-width: 12ch; }
+  .turn__change-body { margin-top: 1.25rem; max-width: 30ch; }
+  .turn__real { color: var(--oro-tinta); }
+  .turn__verbs { margin: 1rem 0 1.75rem; }
+  .turn__verbs li {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-block: 0.55rem;
+    font-family: var(--f-display);
+    font-size: var(--s-3);
+    line-height: 1.05;
+    color: var(--noche);
+  }
+  .turn__verbs li::before {
+    content: '';
+    flex: none;
+    width: 0.32em;
+    height: 0.32em;
+    background: var(--gem);
+    -webkit-mask: var(--star-mask) center / contain no-repeat;
+    mask: var(--star-mask) center / contain no-repeat;
+    transform: translateY(-0.12em);
+  }
+  .turn__closing { margin-bottom: 2rem; font-weight: 600; color: var(--tinta); }
+  @media (max-width: 799px) {
+    .turn__change-grid { grid-template-columns: 1fr; }
+  }
+</style>

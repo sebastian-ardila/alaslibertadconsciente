@@ -1,0 +1,47 @@
+---
+import { video, cta } from '../../content/landing';
+import YouTubeFacade from '../YouTubeFacade.astro';
+import CtaButton from '../CtaButton.astro';
+---
+<section class="vid sec is-night" id="video" aria-labelledby="video-title">
+  <div class="vid__grid wrap">
+    <div class="vid__media" data-thread="left">
+      <YouTubeFacade title="Claudia Palacio presenta Un Encuentro con los 7 Arcángeles" />
+    </div>
+    <div class="vid__copy">
+      <h2 id="video-title" class="vid__quote t-lirica t-3">
+        <span class="vid__mark" aria-hidden="true">“</span>{video.quote}
+      </h2>
+      <CtaButton label={cta.guided} id="video" />
+    </div>
+  </div>
+</section>
+
+<style>
+  .vid { padding-top: clamp(3rem, 6vw, 5rem); }
+  .vid__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+  .vid__quote {
+    position: relative;
+    color: var(--alba);
+    line-height: 1.12;
+  }
+  .vid__mark {
+    position: absolute;
+    left: -0.05em;
+    top: -0.55em;
+    font-size: 3.2em;
+    line-height: 1;
+    color: var(--oro);
+    opacity: 0.55;
+  }
+  .vid__copy :global(.btn) { margin-top: 2.25rem; }
+  @media (max-width: 899px) {
+    .vid__grid { grid-template-columns: 1fr; }
+    .vid__copy { padding-top: 1.5rem; }
+  }
+</style>

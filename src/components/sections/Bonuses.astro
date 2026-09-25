@@ -1,0 +1,76 @@
+---
+import { Picture } from 'astro:assets';
+import cartas from '../../assets/img/bono-cartas.png';
+import ciclos from '../../assets/img/bono-cierre-ciclos.png';
+import { bonuses } from '../../content/landing';
+
+const images = {
+  cartas: { src: cartas, alt: 'Libro Conectando con los ángeles a través de las cartas 11:11, con 60 cartas de mensajes angelicales' },
+  ciclos: { src: ciclos, alt: 'Portada morada de la guía Cierre de ciclos y renacimiento espiritual' },
+} as const;
+---
+<section class="bn sec is-light" aria-labelledby="bn-title">
+  <div class="wrap">
+    <h2 id="bn-title" class="bn__title t-display t-4">{bonuses.title}</h2>
+    <div class="bn__list">
+      {bonuses.items.map((b, i) => {
+        const img = images[b.image];
+        return (
+          <article class:list={['bn__item', i % 2 === 1 && 'is-flip']} aria-labelledby={`bono-${i}`}>
+            <div class="bn__media" data-thread={i % 2 ? 'right' : 'left'}>
+              <div class="bn__ring" aria-hidden="true"></div>
+              <div class="bn__img" data-depth-y="-60">
+                <Picture src={img.src} formats={['avif', 'webp']} widths={[400, 640, 900]} sizes="(min-width: 900px) 36vw, 80vw" alt={img.alt} />
+              </div>
+            </div>
+            <div class="bn__text">
+              <p class="bn__tag t-lirica t-1">Bono {i + 1} de 2</p>
+              <h3 id={`bono-${i}`} class="t-display t-3">{b.title}</h3>
+              <p class="bn__intro t-1">{b.intro}</p>
+              <p class="bn__label">{b.listLabel}</p>
+              <ul class="star-list" role="list">
+                {b.items.map((it) => <li>{it}</li>)}
+              </ul>
+              <p class="bn__outro t-lirica t-1">{b.outro}</p>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<style>
+  .bn__title { color: var(--noche); }
+  .bn__list { display: grid; gap: clamp(5rem, 11vw, 9rem); margin-top: clamp(3rem, 7vw, 6rem); }
+  .bn__item {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    gap: clamp(2.5rem, 7vw, 7rem);
+    align-items: center;
+  }
+  .bn__item.is-flip { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); }
+  .bn__item.is-flip .bn__media { order: 2; }
+  .bn__media { position: relative; display: grid; place-items: center; }
+  .bn__ring {
+    position: absolute;
+    width: 92%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, var(--perla), rgb(250 251 253 / 0));
+    box-shadow: inset 0 0 0 1px rgb(200 161 90 / 0.55);
+  }
+  .bn__img { position: relative; width: 88%; }
+  .bn__img :global(img) { width: 100%; height: auto; filter: drop-shadow(0 35px 40px rgb(10 23 51 / 0.28)); }
+  .bn__tag { color: var(--oro-tinta); }
+  .bn__text h3 { margin-top: 0.3rem; color: var(--noche); max-width: 16ch; }
+  .bn__intro { margin-top: 1.25rem; color: var(--tinta); max-width: 40ch; }
+  .bn__label { margin: 1.5rem 0 1rem; font-weight: 600; color: var(--tinta-2); }
+  .bn__text .star-list { max-width: 48ch; color: var(--tinta); }
+  .bn__outro { margin-top: 1.5rem; color: var(--azul); max-width: 34ch; }
+  @media (max-width: 899px) {
+    .bn__item, .bn__item.is-flip { grid-template-columns: 1fr; }
+    .bn__item.is-flip .bn__media { order: 0; }
+    .bn__media { width: 80%; margin-inline: auto; }
+  }
+</style>

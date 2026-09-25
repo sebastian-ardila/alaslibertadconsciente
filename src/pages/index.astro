@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import StickyCta from '../components/StickyCta.astro';
+import WhatsAppFab from '../components/WhatsAppFab.astro';
+import Hero from '../components/sections/Hero.astro';
+import Video from '../components/sections/Video.astro';
+import Presento from '../components/sections/Presento.astro';
+import Price from '../components/sections/Price.astro';
+import Pain from '../components/sections/Pain.astro';
+import Turn from '../components/sections/Turn.astro';
+import Contents from '../components/sections/Contents.astro';
+import Transform from '../components/sections/Transform.astro';
+import Bonuses from '../components/sections/Bonuses.astro';
+import Guarantee from '../components/sections/Guarantee.astro';
+import Author from '../components/sections/Author.astro';
+import Footer from '../components/sections/Footer.astro';
+---
+<Base>
+  <Header />
+  <main id="contenido" tabindex="-1">
+    <Hero />
+    <Video />
+    <Presento />
+    <Price id="precio-1" seed={5} />
+    <Pain />
+    <Turn />
+    <Contents />
+    <Transform />
+    <Bonuses />
+    <Price id="precio-2" seed={17} />
+    <Guarantee />
+    <Author />
+    <Footer />
+  </main>
+  <StickyCta />
+  <WhatsAppFab />
+  <script>
+    import '../scripts/ui';
+  </script>
+</Base>

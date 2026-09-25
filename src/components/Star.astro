@@ -1,0 +1,8 @@
+---
+// Estrella de cuatro puntas, el motivo gráfico de la marca.
+interface Props { class?: string; size?: string }
+const { class: cls, size } = Astro.props;
+---
+<svg class={cls} viewBox="0 0 24 24" aria-hidden="true" focusable="false" style={size ? `width:${size};height:${size}` : undefined}>
+  <path fill="currentColor" d="M12 0C12.8 8 16 11.2 24 12 16 12.8 12.8 16 12 24 11.2 16 8 12.8 0 12 8 11.2 11.2 8 12 0Z" />
+</svg>
