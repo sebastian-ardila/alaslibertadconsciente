@@ -5,59 +5,82 @@ import { pain } from '../../content/landing';
 import ArchFrame from '../ArchFrame.astro';
 ---
 <section class="pain sec is-deep" aria-labelledby="pain-title">
-  <div class="pain__grid wrap">
-    <div class="pain__media" data-thread="left">
-      <ArchFrame tone="azul">
-        <Picture src={img} formats={['avif', 'webp']} widths={[480, 720, 1024]} sizes="(min-width: 900px) 40vw, 88vw" alt="Mujer sentada junto a una ventana en un día de lluvia, pensativa" />
-      </ArchFrame>
-    </div>
-    <div class="pain__copy">
-      <h2 id="pain-title" class="t-display t-3">{pain.title}</h2>
-      <div class="pain__intro t-1">
-        {pain.intro.map((p) => <p>{p}</p>)}
+  <div class="wrap">
+    <div class="pain__top">
+      <div class="pain__media">
+        <ArchFrame tone="azul">
+          <Picture src={img} formats={['avif', 'webp']} widths={[480, 720, 1024]} sizes="(min-width: 900px) 34vw, 80vw" alt="Mujer sentada junto a una ventana en un día de lluvia, pensativa" />
+        </ArchFrame>
       </div>
-      <ul class="pain__points" role="list" data-scrub-lines>
-        {pain.points.map((p) => <li>{p}</li>)}
-      </ul>
-      <p class="pain__closing t-lirica t-2">{pain.closing}</p>
+      <div class="pain__copy">
+        <h2 id="pain-title" class="t-display t-3">{pain.title}</h2>
+        <div class="pain__intro t-1">
+          {pain.intro.map((p) => <p>{p}</p>)}
+        </div>
+      </div>
     </div>
+
+    <ul class="pain__points" role="list" data-scrub-lines>
+      {pain.points.map((p) => (
+        <li><span class="pain__dash" aria-hidden="true"></span>{p}</li>
+      ))}
+    </ul>
+
+    <p class="pain__closing t-lirica">{pain.closing}</p>
   </div>
 </section>
 
 <style>
-  .pain__grid {
+  .pain__top {
     display: grid;
     grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
     gap: clamp(2.5rem, 7vw, 7rem);
     align-items: center;
   }
-  .pain__media { max-width: 30rem; }
+  .pain__media { max-width: 26rem; width: 100%; }
   .pain__media :global(.arch__clip) { background: #0d1a3a; }
   .pain__media :global(img) { filter: saturate(0.55) brightness(0.9); }
-  .pain__copy h2 { color: var(--perla); max-width: 16ch; }
-  .pain__intro { margin-top: 1.75rem; display: grid; gap: 0.6rem; color: var(--niebla); max-width: 40ch; }
-  .pain__points { margin-top: 2.25rem; }
+  .pain__copy h2 { color: var(--perla); max-width: 15ch; }
+  .pain__intro { margin-top: 2rem; display: grid; gap: 1rem; color: var(--niebla); max-width: 38ch; }
+
+  .pain__points {
+    margin-top: clamp(4rem, 9vw, 7rem);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 clamp(2rem, 5vw, 5rem);
+  }
   .pain__points li {
-    padding: 1rem 0 1rem 2.25rem;
-    position: relative;
+    display: flex;
+    gap: 1.1rem;
+    align-items: baseline;
+    padding-block: 1.4rem;
     border-top: 1px solid rgb(180 192 216 / 0.16);
     font-size: var(--s-1);
-    line-height: 1.35;
+    line-height: 1.4;
     color: var(--alba);
   }
-  .pain__points li:last-child { border-bottom: 1px solid rgb(180 192 216 / 0.16); }
-  .pain__points li::before {
-    content: '';
-    position: absolute;
-    left: 0.25rem;
-    top: 1.55em;
-    width: 1rem;
+  .pain__dash {
+    flex: none;
+    width: 1.1rem;
     height: 1px;
     background: var(--oro);
+    transform: translateY(-0.35em);
   }
-  .pain__closing { margin-top: 2.5rem; color: var(--oro-claro); max-width: 26ch; }
+
+  .pain__closing {
+    margin: clamp(4rem, 9vw, 7rem) auto 0;
+    max-width: 30ch;
+    text-align: center;
+    font-size: var(--s-3);
+    line-height: 1.2;
+    color: var(--oro-claro);
+  }
   @media (max-width: 899px) {
-    .pain__grid { grid-template-columns: 1fr; }
-    .pain__media { width: 78%; margin-inline: auto; }
+    .pain__top { grid-template-columns: 1fr; }
+    .pain__media { width: 72%; margin-inline: auto; }
+  }
+  @media (max-width: 699px) {
+    .pain__points { grid-template-columns: 1fr; }
+    .pain__closing { font-size: var(--s-2); }
   }
 </style>

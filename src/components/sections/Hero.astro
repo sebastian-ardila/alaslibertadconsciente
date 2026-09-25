@@ -1,7 +1,7 @@
 ---
 import { Picture } from 'astro:assets';
 import ebook from '../../assets/img/ebook-portada.png';
-import { hero, cta } from '../../content/landing';
+import { hero, cta, PRODUCT, price } from '../../content/landing';
 import CtaButton from '../CtaButton.astro';
 import Starfield from '../Starfield.astro';
 ---
@@ -11,16 +11,24 @@ import Starfield from '../Starfield.astro';
 
   <div class="hero__grid wrap">
     <div class="hero__copy">
-      <h1 id="hero-title" class="hero__title t-display" data-split>
+      <h1 id="hero-title" class="hero__title t-display">
         <span class="line"><span>Un Encuentro</span></span>
-        <span class="line"><span>con los 7</span></span>
-        <span class="line"><span>Arcángeles</span></span>
+        <span class="line"><span>con los 7 Arcángeles</span></span>
       </h1>
-      <p class="hero__sub t-lirica t-2" data-hero-fade>{hero.subtitle}</p>
+      <p class="hero__sub t-lirica" data-hero-fade>{hero.subtitle}</p>
+
+      <div class="hero__cta" data-hero-fade>
+        <CtaButton label={cta.start} id="hero" />
+        <p class="hero__price">
+          <s><span class="sr-only">Antes </span>${PRODUCT.regularPrice}</s>
+          <span class="hero__now">${PRODUCT.price} {PRODUCT.currency}</span>
+          <span class="hero__access">{price.access}</span>
+        </p>
+      </div>
     </div>
 
     <div class="hero__book" data-hero-book>
-      <svg class="hero__orbits" viewBox="0 0 600 600" aria-hidden="true" data-depth="0.25">
+      <svg class="hero__orbits" viewBox="0 0 600 600" aria-hidden="true">
         <circle cx="300" cy="300" r="290" />
         <circle cx="300" cy="300" r="232" stroke-dasharray="1 7" />
         <circle cx="300" cy="300" r="176" />
@@ -39,13 +47,6 @@ import Starfield from '../Starfield.astro';
         />
       </div>
     </div>
-
-    <div class="hero__cta" data-hero-fade>
-      <p class="hero__lead t-1">{hero.lead}</p>
-      <p class="hero__body">{hero.body}</p>
-      <CtaButton label={cta.start} id="hero" />
-      <p class="hero__closing muted">{hero.closing}</p>
-    </div>
   </div>
 
   <a class="hero__scroll" href="#video" aria-label="Seguir leyendo">
@@ -57,7 +58,7 @@ import Starfield from '../Starfield.astro';
   .hero {
     position: relative;
     min-height: 100svh;
-    padding-block: calc(5.5rem + env(safe-area-inset-top)) clamp(4rem, 7vw, 6rem);
+    padding-block: calc(7rem + env(safe-area-inset-top)) clamp(4.5rem, 8vh, 6.5rem);
     overflow: hidden;
     display: grid;
     align-items: center;
@@ -66,49 +67,59 @@ import Starfield from '../Starfield.astro';
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(60% 55% at 72% 40%, rgb(0 74 173 / 0.55), transparent 70%),
+      radial-gradient(60% 55% at 72% 45%, rgb(0 74 173 / 0.55), transparent 70%),
       radial-gradient(40% 40% at 12% 95%, rgb(0 74 173 / 0.25), transparent 70%),
       linear-gradient(180deg, var(--noche-hondo), var(--noche) 60%);
   }
   .hero__grid {
     position: relative;
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-    grid-template-areas:
-      'copy book'
-      'cta  book';
-    column-gap: clamp(2rem, 5vw, 5rem);
-    row-gap: 2rem;
-    align-items: end;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
   }
-  .hero__copy { grid-area: copy; }
-  .hero__book { grid-area: book; align-self: center; }
-  .hero__cta { grid-area: cta; align-self: start; }
 
+  /* El título se limita también por la altura de la pantalla, para laptops bajas */
   .hero__title {
-    font-size: clamp(3rem, 0.6rem + 5.6vw, 7.25rem);
-    line-height: 0.92;
+    font-size: min(clamp(2.75rem, 0.9rem + 4.9vw, 6.25rem), 10.5vh);
+    line-height: 1;
     letter-spacing: -0.025em;
     color: var(--perla);
   }
-  .hero__title .line { display: block; overflow: hidden; padding-bottom: 0.08em; margin-bottom: -0.08em; }
+  .hero__title .line { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
   .hero__title .line > span { display: inline-block; }
   .hero__sub {
-    margin-top: 1.25rem;
-    max-width: 30ch;
+    margin-top: clamp(1.25rem, 3vh, 2rem);
+    max-width: 28ch;
+    font-size: min(var(--s-2), 4.2vh);
     color: var(--oro-claro);
   }
 
-  .hero__lead { max-width: 34ch; color: var(--alba); }
-  .hero__body { margin-top: 0.75rem; max-width: 44ch; color: var(--niebla); }
-  .hero__cta :global(.btn) { margin-top: 1.5rem; }
-  .hero__closing { margin-top: 1.1rem; font-size: var(--s--1); max-width: 40ch; }
+  .hero__cta {
+    margin-top: clamp(2rem, 5.5vh, 3.25rem);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.75rem;
+  }
+  .hero__price {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 0.6rem;
+    align-items: baseline;
+    line-height: 1.3;
+  }
+  .hero__price s { color: var(--niebla); font-size: var(--s--1); text-decoration-color: var(--gema-rubi); text-decoration-thickness: 2px; }
+  .hero__now { font-family: var(--f-display); font-weight: 600; font-size: var(--s-1); color: var(--perla); }
+  .hero__access { grid-column: 1 / -1; font-size: var(--s--1); color: var(--niebla); }
 
   .hero__book {
     position: relative;
     display: grid;
     place-items: center;
+    width: min(100%, 72vh);
     aspect-ratio: 1;
+    justify-self: center;
   }
   .hero__orbits {
     position: absolute;
@@ -129,7 +140,7 @@ import Starfield from '../Starfield.astro';
   }
   .hero__cover {
     position: relative;
-    width: 86%;
+    width: 84%;
     transform-style: preserve-3d;
     will-change: transform;
   }
@@ -142,7 +153,7 @@ import Starfield from '../Starfield.astro';
   .hero__scroll {
     position: absolute;
     left: 50%;
-    bottom: 1.5rem;
+    bottom: 1rem;
     translate: -50% 0;
     display: grid;
     place-items: center;
@@ -151,7 +162,7 @@ import Starfield from '../Starfield.astro';
   }
   .hero__scroll span {
     width: 1px;
-    height: 2.5rem;
+    height: 2.25rem;
     background: linear-gradient(var(--oro), transparent);
     animation: drip 2.4s var(--ease-out) infinite;
     transform-origin: top;
@@ -159,13 +170,13 @@ import Starfield from '../Starfield.astro';
   @keyframes drip { 0% { transform: scaleY(0); } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
 
   @media (max-width: 899px) {
-    .hero__grid {
-      grid-template-columns: 1fr;
-      grid-template-areas: 'copy' 'book' 'cta';
-      row-gap: 1rem;
-    }
-    .hero__book { width: min(100%, 26rem); margin-inline: auto; }
-    .hero__sub { max-width: 30ch; }
+    .hero { padding-top: calc(6rem + env(safe-area-inset-top)); align-items: start; }
+    .hero__grid { grid-template-columns: 1fr; gap: 0; }
+    .hero__title { font-size: clamp(2.6rem, 1rem + 7vw, 4.25rem); }
+    .hero__sub { font-size: var(--s-1); }
+    .hero__book { order: 2; width: min(80%, 22rem); margin-top: 1.5rem; }
+    .hero__cta { order: 3; margin-top: 1.5rem; }
+    .hero__copy { display: contents; }
     .hero__scroll { display: none; }
   }
 </style>

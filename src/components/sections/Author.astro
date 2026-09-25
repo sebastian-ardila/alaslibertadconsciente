@@ -13,7 +13,7 @@ import ArchFrame from '../ArchFrame.astro';
     </div>
     <div class="au__copy">
       <h2 id="au-title" class="au__q t-lirica t-2">{author.title}</h2>
-      <p class="au__name t-display t-4" data-thread="right">{author.name}</p>
+      <p class="au__name t-display t-4">{author.name}</p>
       <div class="au__bio">
         {author.bio.map((p, i) => <p class:list={[i === 0 && 'au__first t-1']}>{p}</p>)}
       </div>
@@ -31,7 +31,7 @@ import ArchFrame from '../ArchFrame.astro';
   .au__media { position: sticky; top: 7rem; max-width: 30rem; }
   .au__q { color: var(--oro-tinta); }
   .au__name { margin-top: 0.2em; color: var(--noche); }
-  .au__bio { margin-top: 2rem; display: grid; gap: 1.1rem; max-width: 60ch; color: var(--tinta-2); }
+  .au__bio { margin-top: 2.25rem; display: grid; gap: 1.35rem; max-width: 60ch; line-height: 1.75; color: var(--tinta-2); }
   .au__first { color: var(--tinta); }
   .au__first::first-letter {
     float: left;

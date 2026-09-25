@@ -17,7 +17,7 @@ const images = {
         const img = images[b.image];
         return (
           <article class:list={['bn__item', i % 2 === 1 && 'is-flip']} aria-labelledby={`bono-${i}`}>
-            <div class="bn__media" data-thread={i % 2 ? 'right' : 'left'}>
+            <div class="bn__media">
               <div class="bn__ring" aria-hidden="true"></div>
               <div class="bn__img" data-depth-y="-60">
                 <Picture src={img.src} formats={['avif', 'webp']} widths={[400, 640, 900]} sizes="(min-width: 900px) 36vw, 80vw" alt={img.alt} />
@@ -63,11 +63,11 @@ const images = {
   .bn__img { position: relative; width: 88%; }
   .bn__img :global(img) { width: 100%; height: auto; filter: drop-shadow(0 35px 40px rgb(10 23 51 / 0.28)); }
   .bn__tag { color: var(--oro-tinta); }
-  .bn__text h3 { margin-top: 0.3rem; color: var(--noche); max-width: 16ch; }
-  .bn__intro { margin-top: 1.25rem; color: var(--tinta); max-width: 40ch; }
-  .bn__label { margin: 1.5rem 0 1rem; font-weight: 600; color: var(--tinta-2); }
+  .bn__text h3 { margin-top: 0.5rem; color: var(--noche); max-width: 16ch; }
+  .bn__intro { margin-top: 1.5rem; color: var(--tinta); max-width: 40ch; }
+  .bn__label { margin: 2.25rem 0 1.25rem; font-weight: 600; color: var(--tinta-2); }
   .bn__text .star-list { max-width: 48ch; color: var(--tinta); }
-  .bn__outro { margin-top: 1.5rem; color: var(--azul); max-width: 34ch; }
+  .bn__outro { margin-top: 2.25rem; padding-top: 1.5rem; border-top: 1px solid rgb(17 28 56 / 0.1); color: var(--azul); max-width: 40ch; }
   @media (max-width: 899px) {
     .bn__item, .bn__item.is-flip { grid-template-columns: 1fr; }
     .bn__item.is-flip .bn__media { order: 0; }

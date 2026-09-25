@@ -6,7 +6,7 @@ const { id, seed = 3 } = Astro.props;
 ---
 <section class="pz sec is-deep" aria-label="Precio y lo que incluye">
   <Starfield seed={seed} density={0.6} />
-  <div class="pz__in wrap" data-thread="center">
+  <div class="pz__in wrap">
     <PriceCard id={id} />
   </div>
 </section>

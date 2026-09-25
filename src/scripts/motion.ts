@@ -196,7 +196,7 @@ function sealAndFinale() {
 }
 
 /**
- * Hilo dorado: un trazo continuo que une las secciones y se dibuja al avanzar.
+ * Hilo dorado: un trazo continuo en el margen izquierdo que se dibuja al avanzar.
  * Se replica una capa por sección (detrás del contenido, encima del fondo) para no tapar el texto.
  */
 function goldThread(mm: gsap.MatchMedia) {
@@ -226,21 +226,15 @@ function goldThread(mm: gsap.MatchMedia) {
       const top = main.getBoundingClientRect().top + scrollY;
       const W = main.clientWidth;
       const H = main.scrollHeight;
+      // El hilo ondula dentro del margen izquierdo, como la cinta de un libro: nunca cruza el contenido.
+      const gutter = ($('.wrap', main)?.getBoundingClientRect().left ?? 48) - main.getBoundingClientRect().left;
+      const cx = gutter / 2;
+      const amp = Math.min(gutter * 0.28, 22);
+      const startY = innerHeight * 0.3;
+      const step = 560;
       const pts: [number, number][] = [];
-      const book = $('[data-hero-book]');
-      if (book) {
-        const r = book.getBoundingClientRect();
-        pts.push([r.left + r.width / 2, r.bottom + scrollY - top - 20]);
-      }
-      $$('[data-thread]').forEach((el) => {
-        const r = el.getBoundingClientRect();
-        // Elementos dentro del recorrido horizontal no sirven de ancla.
-        if (el.closest('[data-hscroll]')) return;
-        const y = r.top + scrollY - top + r.height / 2;
-        const side = el.dataset.thread;
-        const x = side === 'left' ? Math.max(28, r.left - 40) : side === 'right' ? Math.min(W - 28, r.right + 40) : r.left + r.width / 2;
-        pts.push([x, y]);
-      });
+      for (let y = startY, i = 0; y < H - 80; y += step, i++) pts.push([cx + (i % 2 ? amp : -amp), y]);
+      pts.push([cx, H - 80]);
       pts.sort((a, b) => a[1] - b[1]);
       if (pts.length < 2) return;
 

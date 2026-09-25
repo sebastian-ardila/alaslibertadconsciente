@@ -57,7 +57,7 @@ body {
   color: var(--tinta);
   font-family: var(--f-texto);
   font-size: var(--s-0);
-  line-height: 1.6;
+  line-height: 1.65;
   font-feature-settings: 'kern', 'liga', 'onum' 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -148,15 +148,16 @@ main:focus { outline: none; }
 .is-light .muted, .is-pearl .muted { color: var(--tinta-2); }
 
 /* Lista con estrella de cuatro puntas (reemplaza los ✔ del original) */
-.star-list { list-style: none; padding: 0; display: grid; gap: 0.85em; }
+.star-list { list-style: none; padding: 0; display: grid; gap: 1.05em; }
 .star-list li {
   position: relative;
   padding-left: 1.9em;
+  line-height: 1.5;
 }
 .star-list li::before {
   content: '';
   position: absolute;
-  left: 0.1em; top: 0.42em;
+  left: 0.1em; top: 0.3em;
   width: 0.95em; height: 0.95em;
   background: var(--oro);
   -webkit-mask: var(--star-mask) center / contain no-repeat;
